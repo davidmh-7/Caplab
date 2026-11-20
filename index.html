@@ -24,8 +24,8 @@ body{font:15px/1.45 -apple-system,BlinkMacSystemFont,"SF Pro Display","Inter","S
   border:1px solid rgba(20,30,70,.08);border-radius:28px;
   box-shadow:inset 0 1.5px 0 var(--edge),inset 0 -1px 0 rgba(255,255,255,.6),0 10px 34px rgba(40,60,130,.12);
 }
-.app{display:grid;grid-template-columns:250px 1fr;gap:18px;padding:16px;max-width:1560px;margin:0 auto}
-.side{position:sticky;top:16px;height:calc(100vh - 32px);padding:22px 16px;display:flex;flex-direction:column;gap:6px;overflow:auto}
+.app{display:grid;grid-template-columns:250px 1fr;gap:18px;padding:36px 20px 24px;max-width:1560px;margin:0 auto}
+.side{position:sticky;top:36px;height:calc(100vh - 60px);padding:22px 16px;display:flex;flex-direction:column;gap:6px;overflow:auto}
 .side h1{padding:0 12px 14px}
 .side .sec{font-size:12px;color:var(--mut);padding:16px 12px 6px}
 .nav{display:flex;align-items:center;gap:10px;width:100%;text-align:left;cursor:pointer;border:none;background:transparent;padding:10px 12px;border-radius:16px;text-decoration:none;color:var(--txt);transition:background .15s}
@@ -83,7 +83,7 @@ select option{color:#111;background:#fff}
 .panel h2{font-size:16px;font-weight:600;margin-bottom:12px;letter-spacing:-.01em}
 .tw{height:480px;border-radius:18px;overflow:hidden}
 .tw.ta{height:440px}
-.tape{height:76px;padding:8px 14px;border-radius:999px;overflow:hidden}
+.tape{height:58px;padding:3px 12px;border-radius:999px;overflow:hidden}
 table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
 th{font-weight:500;color:var(--mut);text-align:right;padding:8px 10px;font-size:13px}
 td{padding:12px 10px;text-align:right;border-top:1px solid rgba(20,30,70,.08)}
@@ -141,6 +141,7 @@ input::placeholder{color:rgba(0,0,0,.3)}
 .be{display:flex;justify-content:space-between;font-size:12px;color:var(--mut);font-variant-numeric:tabular-nums}
 .bf{display:flex;justify-content:space-between;margin-top:8px}
 .bc .bud{margin:12px 0 6px;height:10px}
+#form{max-height:90vh;overflow:auto}
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 @media(max-width:560px){.g2{grid-template-columns:1fr}}
 #iform{width:min(660px,94vw);max-height:88vh;overflow:auto}
@@ -149,14 +150,25 @@ input::placeholder{color:rgba(0,0,0,.3)}
 @media(max-width:420px){.icards{grid-template-columns:1fr}}
 .ct tr.tot td{font-weight:650;border-top:2px solid rgba(20,30,70,.18)}
 .tile .x{position:absolute;top:8px;right:10px;border:none;background:none;cursor:pointer;color:var(--mut);font-size:12px}
-@media(max-width:820px){.app{grid-template-columns:1fr;padding:10px}.side{position:static;height:auto;flex-direction:row;flex-wrap:wrap;align-items:center;border-radius:24px;padding:12px}.side h1{padding:0 8px}.side .sec,.side .grow{display:none}.side .nav,.side .btn,.side select{width:auto}}
+.mbar,.scrim{display:none}
+@media(max-width:820px){
+ .app{grid-template-columns:1fr;padding:12px 12px 24px}
+ .mbar{display:flex;align-items:center;gap:12px;padding:8px 14px 8px 8px;border-radius:999px;position:sticky;top:8px;z-index:50;margin-bottom:6px}
+ .burger{width:42px;height:42px;border-radius:50%;border:1px solid rgba(255,255,255,.25);background:linear-gradient(180deg,#3a3a40,#0b0b0f);color:#fff;display:grid;place-items:center;cursor:pointer}
+ .side{position:fixed;left:0;top:0;bottom:0;height:100%;width:min(300px,86vw);z-index:100;border-radius:0 28px 28px 0;transform:translateX(-105%);transition:transform .25s ease;background:rgba(255,255,255,.96);padding:22px 16px}
+ .side.open{transform:none}
+ .scrim{display:block;position:fixed;inset:0;z-index:90;background:rgba(255,255,255,.5);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:opacity .2s}
+ .scrim.on{opacity:1;pointer-events:auto}
+}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
 <body>
 <div class="bg"><i></i><i></i><i></i></div>
 <div class="app">
-<aside class="glass side">
+<div class="glass mbar"><button class="burger" id="burger" aria-label="Abrir menú" aria-expanded="false" aria-controls="side"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button><b style="font-size:18px;letter-spacing:-.02em">Mi cartera</b></div>
+<div class="scrim" id="scrim"></div>
+<aside class="glass side" id="side">
   <h1>Mi cartera</h1>
   <div class="sec">Cartera</div>
   <a class="nav on" data-v="cartera" href="#resumen"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="2"/><rect x="14" y="3" width="7" height="5" rx="2"/><rect x="14" y="12" width="7" height="9" rx="2"/><rect x="3" y="16" width="7" height="5" rx="2"/></svg>Resumen</a>
@@ -175,7 +187,6 @@ input::placeholder{color:rgba(0,0,0,.3)}
   <button class="btn dng" id="reset">Borrar cartera</button>
 </aside>
 <div class="wrap">
-  <div class="glass tape" id="tape"></div>
 
   <div class="view" id="vCartera">
   <div class="bar"><div><h2 class="vt">Mi cartera</h2><div class="note" id="st" style="padding:0">Sin actualizar todavía</div></div><div class="addwrap"><button class="btn pri" id="add" aria-expanded="false" aria-controls="drop"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Añadir acción o ETF<svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button>
@@ -185,11 +196,11 @@ input::placeholder{color:rgba(0,0,0,.3)}
 
   <div class="main" id="grafico">
     <section class="glass panel">
-      <h2 id="chartTitle">Gráfico</h2>
-      <div class="tw" id="chart"></div>
+      <div class="head"><h2 id="chartTitle">Evolución de tu cartera</h2><div class="seg" id="cmseg"><button class="on" data-cm="p">Mi cartera</button><button data-cm="s">Una acción</button></div></div>
+      <div class="tw" id="chart"></div><p class="hint" id="chint" style="margin-top:8px"></p>
     </section>
     <section class="glass panel">
-      <h2>Análisis técnico</h2>
+      <h2 id="techT">Análisis técnico</h2>
       <div class="tw ta" id="tech"></div>
     </section>
   </div>
@@ -209,6 +220,7 @@ input::placeholder{color:rgba(0,0,0,.3)}
       <div class="donut" id="donut"></div>
     </section>
   </div>
+  <div class="glass tape" id="tape"></div>
   </div>
   <div class="view" id="vNoticias" hidden>
     <div class="main">
@@ -230,8 +242,8 @@ input::placeholder{color:rgba(0,0,0,.3)}
     <div class="bar"><div><h2 class="vt">Inmuebles</h2><div class="note" id="isub" style="padding:0">Cuánto te da cada inmueble al mes y al año</div></div>
       <div class="row">
         <label class="row" style="gap:8px;font-size:13px;color:var(--mut)">Tu tipo marginal de IRPF <input id="irpf" type="number" min="0" max="47" step="any" style="width:76px;padding:8px 10px;border-radius:12px"> %</label>
+        <button class="btn" id="isync">Registrar en Gastos e ingresos</button>
         <button class="btn" id="ies" aria-pressed="false">Legislación española: desactivada</button>
-        <button class="btn" id="irec">Registrar alquileres como ingreso</button>
         <button class="btn pri" id="iadd">+ Añadir inmueble</button>
       </div></div>
     <section class="kpis" id="ik"></section>
@@ -296,9 +308,11 @@ input::placeholder{color:rgba(0,0,0,.3)}
     <h2 id="dtitle" style="font-size:18px">Añadir acción</h2>
     <label>Símbolo en TradingView
       <input id="f_sym" required placeholder="NASDAQ:AAPL" autocomplete="off">
-      <span class="hint">Formato BOLSA:TICKER, por ejemplo BME:SAN o NYSE:KO</span>
+      <span class="hint">Formato BOLSA:TICKER. Mejor valores en euros (XETR, BME, EURONEXT…).</span>
     </label>
+    <div class="tw" id="f_q" style="height:130px;border-radius:14px"></div><span class="hint" id="f_st"></span>
     <label>Nombre<input id="f_name" placeholder="Apple"></label>
+    <label>Tipo<select id="f_t"><option>Acción</option><option>ETF</option><option>ETC</option><option>Otro</option></select></label>
     <div class="two">
       <label>Nº de acciones<input id="f_sh" type="number" step="any" min="0" required></label>
       <label>Precio medio de compra<input id="f_cost" type="number" step="any" min="0" required></label>
@@ -332,6 +346,8 @@ input::placeholder{color:rgba(0,0,0,.3)}
     <label>Valor de la construcción para amortizar (€)<input id="i_cons" type="number" step="any" min="0" value="0"><span class="hint">El mayor entre el coste de adquisición y el valor catastral, sin contar el suelo. Con 0 no se amortiza.</span></label>
     <label class="chk" id="i_jl"><input type="checkbox" id="i_joint">Se alquila junto con la vivienda, en el mismo contrato</label>
     <label class="chk" id="i_il"><input type="checkbox" id="i_iva">El importe que cobras ya incluye el IVA del 21 %</label>
+    <label class="chk"><input type="checkbox" id="i_auto">Registrar cada mes en Gastos e ingresos (alquiler, hipoteca y comunidad)</label>
+    <label id="i_sl">Desde el mes<input id="i_since" type="month"></label>
     <div id="i_rl"><label>Reducción por alquiler de vivienda
       <select id="i_red"><option value="0">Sin reducción (0 %)</option><option value="50">50 % · general</option><option value="60">60 % · vivienda rehabilitada o contrato anterior a mayo de 2023</option><option value="70">70 %</option><option value="90">90 % · zona tensionada con rebaja de renta</option><option value="c">Otro porcentaje…</option></select></label>
       <input id="i_redc" type="number" min="0" max="100" step="any" placeholder="Porcentaje de reducción" style="margin-top:8px"></div>
@@ -340,12 +356,12 @@ input::placeholder{color:rgba(0,0,0,.3)}
 </dialog>
 <dialog id="mdlg">
   <form method="dialog" class="glass" id="mform">
-    <h2 style="font-size:18px">Añadir movimiento</h2>
+    <h2 style="font-size:18px" id="m_t">Añadir movimiento</h2>
     <div class="seg" id="mseg"><button type="button" data-t="g" class="on">Gasto</button><button type="button" data-t="i">Ingreso</button><button type="button" data-t="v">Inversión</button></div>
     <label>Categoría<select id="m_c"></select></label>
     <label>Importe (€)<input id="m_a" type="number" inputmode="decimal" step="any" min="0" value="0"></label>
     <label>Fecha<input id="m_d" type="date"></label>
-    <div class="row" style="justify-content:flex-end"><button class="btn" type="button" id="m_x">Cancelar</button><button class="btn dng" type="button" id="m_sub">Restar</button><button class="btn pri" type="submit">Añadir</button></div>
+    <div class="row" style="justify-content:flex-end"><button class="btn" type="button" id="m_x">Cancelar</button><button class="btn dng" type="button" id="m_sub">Restar</button><button class="btn pri" type="submit" id="m_ok">Añadir</button></div>
   </form>
 </dialog>
 <dialog id="cdlg">
@@ -397,12 +413,20 @@ function tape(){
   const syms=S.items.length?S.items.map(i=>({proName:i.sym,title:i.name||i.sym})):[{proName:"FOREXCOM:SPXUSD",title:"S&P 500"},{proName:"FOREXCOM:NSXUSD",title:"Nasdaq 100"},{proName:"FX_IDC:EURUSD",title:"EUR/USD"},{proName:"BITSTAMP:BTCUSD",title:"Bitcoin"}];
   widget($("tape"),"ticker-tape",{symbols:syms,showSymbolLogo:true,displayMode:"adaptive"});
 }
+let CH="";
 function charts(){
-  const it=S.items.find(i=>i.id===S.sel);
-  if(!it){$("chart").innerHTML='<div class="empty">Selecciona una posición.</div>';$("tech").innerHTML="";$("chartTitle").textContent="Gráfico";return}
-  $("chartTitle").textContent=(it.name||it.sym)+" · "+it.sym;
-  widget($("chart"),"advanced-chart",{symbol:it.sym,interval:"D",timezone:"Europe/Madrid",theme:"light",style:"1",allow_symbol_change:false,hide_side_toolbar:false,support_host:"https://www.tradingview.com"});
-  widget($("tech"),"technical-analysis",{symbol:it.sym,interval:"1D",showIntervalTabs:true,displayMode:"single"});
+  const it=S.items.find(i=>i.id===S.sel),port=S.cm!=="s",L=S.items.filter(i=>i.sh>0);
+  document.querySelectorAll("#cmseg button").forEach(x=>x.classList.toggle("on",x.dataset.cm===(port?"p":"s")));
+  if(!S.items.length){CH="";$("chart").innerHTML='<div class="empty">Añade tu primera acción o ETF para ver la evolución.</div>';$("tech").innerHTML="";$("chint").textContent="";$("techT").textContent="Análisis técnico";return}
+  const key=port?"P:"+L.map(i=>i.sh+"*"+i.sym).join("+"):"S:"+(it?it.sym:"");
+  if(key!==CH){CH=key;
+    if(port){$("chartTitle").textContent="Evolución de tu cartera";
+      widget($("chart"),"advanced-chart",{symbol:L.map(i=>i.sh+"*"+i.sym).join("+")||S.items[0].sym,interval:"D",range:"12M",timezone:"Europe/Madrid",theme:"light",style:"3",allow_symbol_change:false,support_host:"https://www.tradingview.com"})}
+    else if(it){$("chartTitle").textContent=(it.name||it.sym);
+      widget($("chart"),"advanced-chart",{symbol:it.sym,interval:"D",timezone:"Europe/Madrid",theme:"light",style:"1",allow_symbol_change:false,support_host:"https://www.tradingview.com"})}
+    else $("chart").innerHTML='<div class="empty">Selecciona una posición en la tabla.</div>'}
+  $("chint").textContent=port?"Suma de todas tus posiciones con las acciones que tienes hoy (no tiene en cuenta cuándo las compraste).":"";
+  if(it){$("techT").textContent="Análisis técnico · "+(it.name||it.sym);widget($("tech"),"technical-analysis",{symbol:it.sym,interval:"1D",showIntervalTabs:true,displayMode:"single"})}
 }
 function render(){
     const inv=S.items.reduce((a,i)=>a+i.sh*i.cost,0);
@@ -411,7 +435,7 @@ function render(){
   const G=i=>i.cost?(i.px/i.cost-1)*100:0;
   const best=[...S.items].sort((a,b)=>G(b)-G(a))[0];
   $("kpis").innerHTML=
-   `<div class="glass kpi"><small>Patrimonio total</small><b>${money(val+cash()+invNet())}</b><small>Efectivo ${money(cash())}${S.inm.length?" · Inmuebles "+money(invNet()):""}</small></div>
+   `<div class="glass kpi"><small>Patrimonio total</small><b>${money(val+cash()+invNet())}</b></div>
     <div class="glass kpi"><small>Valor de la cartera</small><b>${money(val)}</b></div>
     <div class="glass kpi"><small>Invertido</small><b>${money(inv)}</b></div>
     <div class="glass kpi"><small>Ganancia total</small><b class="${cls(pl)}">${money(pl)}</b><small class="${cls(pl)}">${pct(plp)}</small></div>
@@ -420,7 +444,7 @@ function render(){
   $("rows").innerHTML=S.items.map(i=>{
     const v=i.sh*i.px,g=v-i.sh*i.cost,gp=G(i);
     return `<tr data-id="${i.id}" class="${i.id===S.sel?"sel":""}">
-     <td>${esc(i.name||i.sym)}<small>${esc(i.sym)}</small></td><td>${i.sh}</td><td>${money(i.cost)}</td><td>${money(i.px)}</td><td>${money(v)}</td>
+     <td>${esc(i.name||i.sym)}<small>${i.t?esc(i.t)+" · ":""}${esc(i.sym)}</small></td><td>${i.sh}</td><td>${money(i.cost)}</td><td>${money(i.px)}</td><td>${money(v)}</td>
      <td class="${cls(g)}">${money(g)}<small>${pct(gp)}</small></td>
      <td style="white-space:nowrap"><button class="btn sm" data-edit="${i.id}">Editar</button> <button class="btn sm dng" data-del="${i.id}">Quitar</button></td></tr>`}).join("");
   donut(val);
@@ -439,20 +463,37 @@ function donut(total){
 
 const dlg=$("dlg");let editing=null;
 function ySym(tv){const [x,t]=tv.split(":");if(!t)return "";const m={XETR:".DE",BME:".MC",LSE:".L",NASDAQ:"",NYSE:"",AMEX:""};return m[x]!==undefined?t+m[x]:""}
+async function tvQuote(syms){
+  const r=await fetch("https://scanner.tradingview.com/global/scan",{method:"POST",body:JSON.stringify({symbols:{tickers:syms,query:{types:[]}},columns:["close"]})});
+  const j=await r.json(),m={};(j.data||[]).forEach(x=>{if(x.d&&x.d[0]>0)m[x.s]=x.d[0]});return m;
+}
+async function quote(sym,y){
+  try{const m=await tvQuote([sym]);if(m[sym])return m[sym]}catch(e){}
+  if(y){try{return await getPx(y)}catch(e){}}return null;
+}
+function fillQuote(){
+  const sym=$("f_sym").value.trim().toUpperCase();if(!sym)return;
+  widget($("f_q"),"single-quote",{symbol:sym,width:"100%"});
+  $("f_st").textContent="Buscando el precio actual…";
+  quote(sym,$("f_y").value.trim().toUpperCase()).then(v=>{
+    if(v){if(editing==null&&!$("f_px").dataset.u)$("f_px").value=v.toFixed(2);$("f_st").textContent="Precio actual: "+money(v)+(editing==null?" (ya puesto en «Precio actual»)":"")}
+    else $("f_st").textContent="No se pudo leer el precio automáticamente. Escríbelo a mano: el cuadro de TradingView de arriba muestra el actual."});
+}
 function openForm(it,pre){
   editing=it?it.id:null;const d=it||pre||{};
   $("dtitle").textContent=it?"Editar posición":"Añadir posición";
-  $("f_sym").value=d.sym||"";$("f_name").value=d.name||"";
-  $("f_sh").value=d.sh??"";$("f_cost").value=d.cost??"";$("f_px").value=d.px??"";$("f_y").value=d.y||"";
-  dlg.showModal();
-  if(!it&&d.y)getPx(d.y).then(v=>{if(v&&!$("f_px").value)$("f_px").value=v.toFixed(2)}).catch(()=>{});
+  $("f_sym").value=d.sym||"";$("f_name").value=d.name||"";$("f_t").value=d.t||"Acción";
+  $("f_sh").value=d.sh??"";$("f_cost").value=d.cost??"";$("f_px").value=d.px??"";$("f_px").dataset.u="";$("f_y").value=d.y||"";
+  $("f_q").innerHTML="";$("f_st").textContent="";
+  dlg.showModal();if(d.sym)fillQuote();
 }
-$("f_sym").onblur=()=>{if(!$("f_y").value)$("f_y").value=ySym($("f_sym").value.trim().toUpperCase())};
+$("f_px").oninput=()=>{$("f_px").dataset.u="1"};
+$("f_sym").onchange=()=>{const v=$("f_sym").value.trim().toUpperCase();if(!$("f_y").value)$("f_y").value=ySym(v);fillQuote()};
 $("add").onclick=()=>{const h=!$("drop").hidden;$("drop").hidden=h;$("add").setAttribute("aria-expanded",String(!h));if(!h){$("q").value="";renderDrop("");$("q").focus()}};
 $("cancel").onclick=()=>dlg.close();
 $("form").onsubmit=e=>{
   e.preventDefault();
-  const o={y:$("f_y").value.trim().toUpperCase(),sym:$("f_sym").value.trim().toUpperCase(),name:$("f_name").value.trim(),sh:+$("f_sh").value,cost:+$("f_cost").value,px:+$("f_px").value};
+  const o={y:$("f_y").value.trim().toUpperCase(),sym:$("f_sym").value.trim().toUpperCase(),name:$("f_name").value.trim(),t:$("f_t").value,sh:+$("f_sh").value,cost:+$("f_cost").value,px:+$("f_px").value};
   if(editing){const it=S.items.find(i=>i.id===editing);Object.assign(it,o);S.sel=it.id}
   else{o.id=Date.now();S.items.push(o);S.sel=o.id}
   save();dlg.close();render();tape();charts();updatePrices();
@@ -478,8 +519,9 @@ function showView(v){
   Object.entries({cartera:"vCartera",noticias:"vNoticias",gastos:"vGastos",inm:"vInm",calc:"vCalc"}).forEach(([k,id])=>$(id).hidden=k!==v);
   if(v==="noticias")loadNews();
   if(v==="calc")calc();
-  if(v==="gastos")renderG();
-  if(v==="inm")renderI();
+  if(v==="gastos"){syncInm();renderG()}
+  if(v==="inm"){syncInm();renderI()}
+  if(v==="cartera"){syncInm();render()}
 }
 $("seg").onclick=e=>{const b=e.target.closest("button");if(!b)return;NF=b.dataset.f;
   document.querySelectorAll("#seg button").forEach(x=>x.classList.toggle("on",x===b));loadNews()};
@@ -491,24 +533,12 @@ document.querySelectorAll(".nav").forEach(a=>a.onclick=e=>{
   else window.scrollTo({top:0,behavior:"smooth"});
 });
 const CAT=[
- ["Tu lista",[
-  ["S&P 500 · iShares Core (SXR8)","XETR:SXR8","SXR8.DE","ETF"],
-  ["S&P 500 · Vanguard (VUAA)","XETR:VUAA","VUAA.DE","ETF"],
-  ["MSCI World · iShares Core (EUNL)","XETR:EUNL","EUNL.DE","ETF"],
-  ["MSCI World · Xtrackers (XDWD)","XETR:XDWD","XDWD.DE","ETF"],
-  ["Coca-Cola","XETR:CCC3","CCC3.DE","Acción"],
-  ["NVIDIA","XETR:NVD","NVD.DE","Acción"],
-  ["Alphabet (clase A)","XETR:ABEA","ABEA.DE","Acción"]]],
- ["ETFs populares",[
-  ["FTSE All-World · Vanguard (VWCE)","XETR:VWCE","VWCE.DE","ETF"],
-  ["MSCI Emerging Markets IMI · iShares (IS3N)","XETR:IS3N","IS3N.DE","ETF"],
-  ["Nasdaq 100 · iShares (SXRV)","XETR:SXRV","SXRV.DE","ETF"],
-  ["STOXX Europe 600 · iShares (EXSA)","XETR:EXSA","EXSA.DE","ETF"]]],
- ["Acciones populares",[
-  ["Apple","XETR:APC","APC.DE","Acción"],["Microsoft","XETR:MSF","MSF.DE","Acción"],
-  ["Amazon","XETR:AMZ","AMZ.DE","Acción"],["Tesla","XETR:TL0","TL0.DE","Acción"],
-  ["Meta","XETR:FB2A","FB2A.DE","Acción"],["Santander","BME:SAN","SAN.MC","Acción"],
-  ["Inditex","BME:ITX","ITX.MC","Acción"],["Iberdrola","BME:IBE","IBE.MC","Acción"]]]];
+["Tu lista",[["S&P 500 · iShares Core (SXR8)","XETR:SXR8","ETF"],["S&P 500 · Vanguard (VUAA)","XETR:VUAA","ETF"],["MSCI World · iShares Core (EUNL)","XETR:EUNL","ETF"],["MSCI World · Xtrackers (XDWD)","XETR:XDWD","ETF"],["Coca-Cola","XETR:CCC3","Acción"],["NVIDIA","XETR:NVD","Acción"],["Alphabet (clase A)","XETR:ABEA","Acción"]]],
+["ETFs",[["FTSE All-World · Vanguard (VWCE)","XETR:VWCE","ETF"],["FTSE All-World dist. · Vanguard (VWRL)","XETR:VWRL","ETF"],["MSCI ACWI IMI · SPDR (SPYI)","XETR:SPYI","ETF"],["S&P 500 · SPDR (SPYL)","XETR:SPYL","ETF"],["Nasdaq 100 · iShares (SXRV)","XETR:SXRV","ETF"],["MSCI World Small Cap · iShares (IUSN)","XETR:IUSN","ETF"],["MSCI Emerging Markets IMI · iShares (IS3N)","XETR:IS3N","ETF"],["FTSE Emerging Markets · Vanguard (VFEM)","XETR:VFEM","ETF"],["STOXX Europe 600 · iShares (EXSA)","XETR:EXSA","ETF"],["MSCI Europe · iShares Core (IMAE)","XETR:IMAE","ETF"],["Euro Stoxx 50 · iShares (EXW1)","XETR:EXW1","ETF"],["DAX · iShares Core (EXS1)","XETR:EXS1","ETF"],["Dividendos globales · Vanguard (VHYL)","XETR:VHYL","ETF"],["Semiconductores · VanEck (VVSM)","XETR:VVSM","ETF"],["Energía limpia · iShares (IQQH)","XETR:IQQH","ETF"],["Oro físico · Xetra-Gold (4GLD)","XETR:4GLD","ETC"]]],
+["Acciones de EE. UU. (en euros)",[["Apple","XETR:APC","Acción"],["Microsoft","XETR:MSF","Acción"],["Amazon","XETR:AMZ","Acción"],["Meta","XETR:FB2A","Acción"],["Tesla","XETR:TL0","Acción"],["Netflix","XETR:NFC","Acción"],["Broadcom","XETR:1YD","Acción"],["AMD","XETR:AMD","Acción"],["Intel","XETR:INL","Acción"],["Palantir","XETR:PTX","Acción"],["Oracle","XETR:ORC","Acción"],["Adobe","XETR:ADB","Acción"],["Salesforce","XETR:FOO","Acción"],["Visa","XETR:3V64","Acción"],["Mastercard","XETR:8MC","Acción"],["JPMorgan","XETR:CMC","Acción"],["Berkshire Hathaway (B)","XETR:BRYN","Acción"],["Johnson & Johnson","XETR:JNJ","Acción"],["Eli Lilly","XETR:LLY","Acción"],["Procter & Gamble","XETR:PRG","Acción"],["PepsiCo","XETR:PEP","Acción"],["McDonald's","XETR:MDO","Acción"],["Walt Disney","XETR:WDP","Acción"],["Nike","XETR:NKE","Acción"],["Walmart","XETR:WMT","Acción"],["Costco","XETR:CTO","Acción"],["ExxonMobil","XETR:XONA","Acción"],["Pfizer","XETR:PFE","Acción"],["Uber","XETR:UT8","Acción"],["PayPal","XETR:2PP","Acción"],["Boeing","XETR:BCO","Acción"]]],
+["Acciones europeas",[["ASML","EURONEXT:ASML","Acción","ASML.AS"],["LVMH","EURONEXT:MC","Acción","MC.PA"],["TotalEnergies","EURONEXT:TTE","Acción","TTE.PA"],["Airbus","EURONEXT:AIR","Acción","AIR.PA"],["L'Oréal","EURONEXT:OR","Acción","OR.PA"],["SAP","XETR:SAP","Acción"],["Siemens","XETR:SIE","Acción"],["Allianz","XETR:ALV","Acción"],["Mercedes-Benz","XETR:MBG","Acción"],["BMW","XETR:BMW","Acción"],["Volkswagen (pref.)","XETR:VOW3","Acción"],["Adidas","XETR:ADS","Acción"],["Deutsche Telekom","XETR:DTE","Acción"],["Nestlé","XETR:NESR","Acción"]]],
+["Acciones españolas",[["Santander","BME:SAN","Acción"],["BBVA","BME:BBVA","Acción"],["Inditex","BME:ITX","Acción"],["Iberdrola","BME:IBE","Acción"],["Telefónica","BME:TEF","Acción"],["Repsol","BME:REP","Acción"],["CaixaBank","BME:CABK","Acción"],["Endesa","BME:ELE","Acción"],["Naturgy","BME:NTGY","Acción"],["Amadeus","BME:AMS","Acción"],["Aena","BME:AENA","Acción"],["Ferrovial","BME:FER","Acción"],["Cellnex","BME:CLNX","Acción"],["ACS","BME:ACS","Acción"],["Sabadell","BME:SAB","Acción"],["Bankinter","BME:BKT","Acción"],["Mapfre","BME:MAP","Acción"],["Redeia","BME:RED","Acción"],["Acciona","BME:ANA","Acción"],["Grifols","BME:GRF","Acción"]]]
+].map(([g,l])=>[g,l.map(([n,sy,t,y])=>[n,sy,y||ySym(sy),t])]);
 function renderDrop(f){
   f=f.trim().toLowerCase();let h='<button data-o="1"><b>Otro (escribir símbolo)</b><small>Cualquier valor de TradingView</small></button>';
   CAT.forEach(([g,l],gi)=>{const it=l.map((x,xi)=>[x,xi]).filter(([x])=>!f||(x[0]+x[1]).toLowerCase().includes(f));
@@ -520,19 +550,20 @@ $("dl").onclick=e=>{const b=e.target.closest("button");if(!b)return;
   $("drop").hidden=true;$("add").setAttribute("aria-expanded","false");
   if(b.dataset.o)return openForm();
   const [g,x]=b.dataset.c.split("-"),c=CAT[g][1][x];
-  openForm(null,{name:c[0],sym:c[1],y:c[2]})};
+  openForm(null,{name:c[0],sym:c[1],y:c[2],t:c[3]})};
 async function getPx(y){
   const r=await fetch("https://query1.finance.yahoo.com/v8/finance/chart/"+encodeURIComponent(y)+"?interval=1m&range=1d");
   const j=await r.json();return j.chart.result[0].meta.regularMarketPrice;
 }
 let T;
 async function updatePrices(){
-  const L=S.items.filter(i=>i.y);if(!L.length){$("st").textContent="Añade un símbolo Yahoo para el precio automático";return}
-  $("st").textContent="Actualizando…";let ok=0,bad=0;
-  await Promise.all(L.map(async i=>{try{const p=await getPx(i.y);if(p>0){i.px=p;ok++}else bad++}catch(e){bad++}}));
+  const L=S.items;if(!L.length){$("st").textContent="Añade una acción o ETF para ver precios en vivo";return}
+  $("st").textContent="Actualizando…";let ok=0,bad=0,m={};
+  try{m=await tvQuote(L.map(i=>i.sym))}catch(e){}
+  await Promise.all(L.map(async i=>{let p=m[i.sym];if(!p&&i.y){try{p=await getPx(i.y)}catch(e){}}if(p>0){i.px=p;ok++}else bad++}));
   if(ok){save();render()}
   const t=new Date().toLocaleTimeString("es-ES",{hour:"2-digit",minute:"2-digit"});
-  $("st").textContent=ok?("Actualizado a las "+t+(bad?` · ${bad} sin datos`:"")):"No se pudieron obtener precios (red o bloqueo). Se usan los manuales.";
+  $("st").textContent=ok?("Precios actualizados a las "+t+(bad?` · ${bad} sin datos`:"")):"No se pudieron obtener precios (red o bloqueo). Se usan los manuales.";
 }
 function schedule(){clearInterval(T);if(S.iv>0)T=setInterval(updatePrices,S.iv*60000)}
 $("iv").onchange=e=>{S.iv=+e.target.value;save();schedule()};
@@ -586,9 +617,9 @@ $("usep").onclick=()=>{$("c0").value=Math.round(S.items.reduce((a,i)=>a+i.sh*i.p
 /* ---------- Inmuebles ---------- */
 const KIND={vivienda:"Vivienda",garaje:"Garaje",trastero:"Trastero",local:"Local",otro:"Otro"};
 S.inm=S.inm||[
- {id:1,n:"Casa",k:"vivienda",rent:800,val:0,hip:0,cuo:0,ibi:0,tas:0,com:0,seg:0,int:0,otr:0,cons:0,joint:false,ivaInc:false,red:50},
- {id:2,n:"Garaje",k:"garaje",rent:120,val:0,hip:0,cuo:0,ibi:0,tas:0,com:0,seg:0,int:0,otr:0,cons:0,joint:false,ivaInc:false,red:0}];
-S.irpf=S.irpf??30;S.es=!!S.es;
+ {id:1,n:"Casa",k:"vivienda",rent:800,val:0,hip:0,cuo:0,ibi:0,tas:0,com:0,seg:0,int:0,otr:0,cons:0,joint:false,ivaInc:false,red:50,since:""},
+ {id:2,n:"Garaje",k:"garaje",rent:120,val:0,hip:0,cuo:0,ibi:0,tas:0,com:0,seg:0,int:0,otr:0,cons:0,joint:false,ivaInc:false,red:0,since:""}];
+S.irpf=S.irpf??30;S.es=!!S.es;S.cm=S.cm||"p";S.skip=S.skip||[];
 const invNet=()=>S.inm.reduce((a,h)=>a+h.val-h.hip,0);
 const sepIva=h=>(h.k==="garaje"||h.k==="trastero")?!h.joint:(h.k==="local"||h.k==="otro");
 const reducible=h=>h.k==="vivienda"||((h.k==="garaje"||h.k==="trastero")&&h.joint);
@@ -618,36 +649,35 @@ function renderI(){
       ${row("Alquiler cobrado",c.I)}${c.iva?row("IVA 21 % (a Hacienda)",-c.iva):""}${row("Gastos (IBI, comunidad, seguro…)",-c.gas)}${es?row("IRPF estimado ("+S.irpf+" % sobre lo tributable)",-c.tax):""}
       <tr class="tot"><td>Neto</td><td>${money(c.neto/12)}</td><td>${money(c.neto)}</td></tr>
       ${h.cuo>0?row("Tras pagar la hipoteca",c.flujo):""}</tbody></table>
-     <p class="hint" style="margin-top:10px">${h.val?"Rentabilidad bruta "+c.rb.toFixed(2).replace(".",",")+" % · neta "+c.rn.toFixed(2).replace(".",",")+" %":"Añade el valor del inmueble para ver su rentabilidad."}${es&&sepIva(h)&&!h.ivaInc?` Cobras ${money(c.I*0.21/12)} al mes de IVA aparte: lo ingresas a Hacienda y no cuenta en tu neto.`:""}${es&&reducible(h)&&h.red?` Reducción aplicada: ${h.red} %.`:""}</p></section>`}).join(""):'<div class="empty glass panel" style="grid-column:1/-1">Aún no tienes inmuebles. Pulsa «Añadir inmueble».</div>';
+     <p class="hint" style="margin-top:10px">${h.val?"Rentabilidad bruta "+c.rb.toFixed(2).replace(".",",")+" % · neta "+c.rn.toFixed(2).replace(".",",")+" %":"Añade el valor actual para ver su rentabilidad y sumarlo a tu patrimonio."}${es&&sepIva(h)&&!h.ivaInc?` Cobras ${money(c.I*0.21/12)} al mes de IVA aparte: lo ingresas a Hacienda y no cuenta en tu neto.`:""}${es&&reducible(h)&&h.red?` Reducción aplicada: ${h.red} %.`:""}${!h.noAuto&&h.rent>0&&h.since?` Se registra cada mes en Gastos e ingresos desde ${h.since}.`:""}</p></section>`}).join(""):'<div class="empty glass panel" style="grid-column:1/-1">Aún no tienes inmuebles. Pulsa «Añadir inmueble».</div>';
 }
 const idlg=$("idlg");let iE=null;
 const IF=["rent","val","hip","cuo","ibi","tas","com","seg","int","otr","cons"];
 function iUpd(){const k=$("i_k").value,j=$("i_joint").checked,gt=k==="garaje"||k==="trastero";
-  $("i_jl").hidden=!gt;const h={k,joint:gt&&j};$("i_il").hidden=!sepIva(h);$("i_rl").hidden=!reducible(h);$("i_redc").hidden=$("i_red").value!=="c"}
+  $("i_jl").hidden=!gt;const h={k,joint:gt&&j};$("i_il").hidden=!sepIva(h);$("i_rl").hidden=!reducible(h);$("i_redc").hidden=$("i_red").value!=="c";$("i_sl").hidden=!$("i_auto").checked}
 function openI(h){
   iE=h?h.id:null;$("i_t").textContent=h?"Editar inmueble":"Añadir inmueble";$("i_n").value=h?h.n:"";$("i_k").value=h?h.k:"vivienda";
-  IF.forEach(f=>$("i_"+f).value=h?h[f]:0);$("i_joint").checked=!!(h&&h.joint);$("i_iva").checked=!!(h&&h.ivaInc);
+  IF.forEach(f=>$("i_"+f).value=h?h[f]:0);$("i_auto").checked=h?!h.noAuto:true;$("i_since").value=(h&&h.since)||todayS().slice(0,7);$("i_joint").checked=!!(h&&h.joint);$("i_iva").checked=!!(h&&h.ivaInc);
   const r=h?h.red:0,std=["0","50","60","70","90"].includes(String(r));$("i_red").value=std?String(r):"c";$("i_redc").value=std?"":r;
   iUpd();idlg.showModal();
 }
-["i_k","i_joint","i_red"].forEach(id=>$(id).onchange=iUpd);
+["i_k","i_joint","i_red","i_auto"].forEach(id=>$(id).onchange=iUpd);
 $("iadd").onclick=()=>openI();$("i_x").onclick=()=>idlg.close();
 $("iform").onsubmit=e=>{
   e.preventDefault();const o={n:$("i_n").value.trim(),k:$("i_k").value};
   IF.forEach(f=>o[f]=Math.max(0,parseFloat($("i_"+f).value)||0));
-  o.joint=$("i_joint").checked&&(o.k==="garaje"||o.k==="trastero");o.ivaInc=$("i_iva").checked;
+  o.joint=$("i_joint").checked&&(o.k==="garaje"||o.k==="trastero");o.ivaInc=$("i_iva").checked;o.noAuto=!$("i_auto").checked;o.since=$("i_since").value||todayS().slice(0,7);
   o.red=$("i_red").value==="c"?Math.min(100,Math.max(0,parseFloat($("i_redc").value)||0)):+$("i_red").value;
   if(iE)Object.assign(S.inm.find(x=>x.id===iE),o);else{o.id=Date.now();S.inm.push(o)}
-  save();idlg.close();renderI();render();
+  save();idlg.close();syncInm();renderI();render();
 };
 $("ilist").onclick=e=>{const b=e.target.closest("button");if(!b)return;
   if(b.dataset.ied)openI(S.inm.find(x=>x.id==b.dataset.ied));
-  if(b.dataset.idel){const h=S.inm.find(x=>x.id==b.dataset.idel);if(confirm("¿Quitar «"+h.n+"»?")){S.inm=S.inm.filter(x=>x!==h);save();renderI();render()}}};
+  if(b.dataset.idel){const h=S.inm.find(x=>x.id==b.dataset.idel);if(confirm("¿Quitar «"+h.n+"»? También se quitarán sus ingresos y gastos registrados.")){S.inm=S.inm.filter(x=>x!==h);syncInm();save();renderI();render()}}};
+$("cmseg").onclick=e=>{const b=e.target.closest("button");if(b){S.cm=b.dataset.cm;save();charts()}};
+$("isync").onclick=()=>{const n=syncInm();render();renderI();$("isub").textContent=n?"Se han registrado "+n+(n>1?" movimientos nuevos":" movimiento nuevo")+" en Gastos e ingresos":"Todo está ya registrado en Gastos e ingresos"};
 $("ies").onclick=()=>{S.es=!S.es;save();renderI()};
 $("irpf").oninput=e=>{S.irpf=Math.min(47,Math.max(0,parseFloat(e.target.value)||0));save();renderI()};
-$("irec").onclick=()=>{const L=S.inm.filter(h=>h.rent>0);if(!L.length)return;const t=L.reduce((a,h)=>a+h.rent,0);
-  if(!confirm("Se añadirán "+L.length+" ingresos ("+money(t)+") a «Gastos e ingresos», con fecha de hoy. ¿Continuar?"))return;
-  if(!S.ic.includes("Alquiler"))S.ic.push("Alquiler");L.forEach((h,k)=>S.tx.push({id:Date.now()+k,d:todayS(),t:"i",c:"Alquiler",a:h.rent}));save();render()};
 /* ---------- Gastos e ingresos ---------- */
 S.tx=S.tx||[];S.cash0=S.cash0||0;S.lim=S.lim||{};S.gm=S.gm||"m";
 S.gc=S.gc||["Vivienda","Supermercado","Gasolina","Transporte","Restaurantes","Ocio","Ropa","Salud","Suscripciones","Viajes","Otros"];
@@ -702,21 +732,31 @@ function renderG(){
    <div class="gh"><h3>Ingresos</h3></div><div class="tiles">${S.ic.map(c=>icard("i",c,1)).join("")}</div>
    <div class="gh"><h3>Ahorro e inversión</h3></div><div class="tiles">${icard("v","Aportación a cartera",0)}</div>`;
   const L=S.tx.filter(x=>x.d.startsWith(p)).sort((x,y)=>y.d.localeCompare(x.d)||y.id-x.id).slice(0,40);
-  $("gtx").innerHTML=L.length?L.map(x=>`<tr><td>${x.d.split("-").reverse().join("/")}</td><td>${esc(x.c)}</td><td>${{g:"Gasto",i:"Ingreso",v:"Inversión"}[x.t]}</td><td>${x.a<0?"−":""}${money(Math.abs(x.a))}</td><td><button class="btn sm dng" data-del="${x.id}">Quitar</button></td></tr>`).join(""):'<tr><td colspan="5" class="empty">Sin movimientos en este periodo.</td></tr>';
+  $("gtx").innerHTML=L.length?L.map(x=>`<tr><td>${x.d.split("-").reverse().join("/")}</td><td>${esc(x.c)}</td><td>${{g:"Gasto",i:"Ingreso",v:"Inversión"}[x.t]}</td><td>${x.a<0?"−":""}${money(Math.abs(x.a))}</td><td style="white-space:nowrap"><button class="btn sm" data-etx="${x.id}">Editar</button> <button class="btn sm dng" data-del="${x.id}">Quitar</button></td></tr>`).join(""):'<tr><td colspan="5" class="empty">Sin movimientos en este periodo.</td></tr>';
 }
 function addDate(){const cur=todayS();return S.gm==="m"?(S.mon===cur.slice(0,7)?cur:S.mon+"-01"):(S.mon.slice(0,4)===cur.slice(0,4)?cur:S.mon.slice(0,4)+"-01-01")}
 function shift(d){let y=+S.mon.slice(0,4),m=+S.mon.slice(5);if(S.gm==="a")y+=d;else{m+=d;if(m<1){m=12;y--}if(m>12){m=1;y++}}S.mon=y+"-"+pad(m);save();renderG()}
 $("gprev").onclick=()=>shift(-1);$("gnext").onclick=()=>shift(1);
 $("gseg").onclick=e=>{const b=e.target.closest("button");if(b){S.gm=b.dataset.m;save();renderG()}};
 const mdlg=$("mdlg"),cdlg=$("cdlg");let mT="g",cT="g",cE=null;
-function mFill(){const L=mT==="g"?S.gc:mT==="i"?S.ic:["Aportación a cartera"];$("m_c").innerHTML=L.map(c=>`<option>${esc(c)}</option>`).join("")}
-function openM(t,c){
-  mT=t||"g";document.querySelectorAll("#mseg button").forEach(b=>b.classList.toggle("on",b.dataset.t===mT));
-  mFill();if(c)$("m_c").value=c;$("m_a").value=0;$("m_d").value=addDate();mdlg.showModal();
-  setTimeout(()=>{$("m_a").focus();$("m_a").select()},50);
+function mFill(ex){let L=mT==="g"?S.gc:mT==="i"?S.ic:["Aportación a cartera"];if(ex&&!L.includes(ex))L=[...L,ex];$("m_c").innerHTML=L.map(c=>`<option>${esc(c)}</option>`).join("")}
+let mE=null;
+function openM(t,c,x){
+  mE=x?x.id:null;mT=t||"g";document.querySelectorAll("#mseg button").forEach(b=>b.classList.toggle("on",b.dataset.t===mT));
+  mFill(c);if(c)$("m_c").value=c;
+  $("m_t").textContent=x?"Editar movimiento":"Añadir movimiento";$("m_ok").textContent=x?"Guardar cambios":"Añadir";
+  $("m_sub").hidden=!!x;$("m_a").min=x?"":"0";$("m_a").value=x?x.a:0;$("m_d").value=x?x.d:addDate();
+  mdlg.showModal();setTimeout(()=>{$("m_a").focus();$("m_a").select()},50);
 }
 function mSave(sg){
-  const v=parseFloat($("m_a").value);if(!(v>0)){$("m_a").focus();return}
+  const v=parseFloat($("m_a").value);
+  if(mE!==null){
+    if(isNaN(v)||v===0){$("m_a").focus();return}
+    const x=S.tx.find(z=>z.id===mE);
+    if(x){x.d=$("m_d").value||x.d;x.t=mT;x.c=$("m_c").value;x.a=v;if(x.key)x.edited=true;S.mon=x.d.slice(0,7)}
+    save();mdlg.close();renderG();render();return;
+  }
+  if(!(v>0)){$("m_a").focus();return}
   const d=$("m_d").value||addDate();
   S.tx.push({id:Date.now(),d,t:mT,c:$("m_c").value,a:v*sg});S.mon=d.slice(0,7);
   save();mdlg.close();renderG();render();
@@ -744,11 +784,43 @@ $("cform").onsubmit=e=>{
 };
 $("gtiles").onclick=e=>{const b=e.target.closest("button");if(!b)return;
   if(b.dataset.addm)openM(b.dataset.t,b.dataset.c);else if(b.dataset.edit)openC(b.dataset.t,b.dataset.c)};
-$("gtx").onclick=e=>{const b=e.target.closest("[data-del]");if(b){S.tx=S.tx.filter(x=>x.id!=b.dataset.del);save();renderG();render()}};
+$("gtx").onclick=e=>{
+  const ed=e.target.closest("[data-etx]");if(ed){const x=S.tx.find(z=>z.id==ed.dataset.etx);if(x)openM(x.t,x.c,x);return}
+  const b=e.target.closest("[data-del]");if(b){const x0=S.tx.find(z=>z.id==b.dataset.del);if(x0&&x0.key)S.skip.push(x0.key);S.tx=S.tx.filter(z=>z!==x0);save();renderG();render()}};
 $("gk").onclick=e=>{if(e.target.id!=="gcash")return;const v=prompt("¿Cuánto efectivo y ahorro tienes ahora mismo (€)?",String(Math.round(cash())));
   const n=v===null?NaN:parseFloat(v.replace(",","."));if(!isNaN(n)){S.cash0+=n-cash();save();renderG();render()}};
+const setMenu=o=>{$("side").classList.toggle("open",o);$("scrim").classList.toggle("on",o);$("burger").setAttribute("aria-expanded",String(o));$("burger").setAttribute("aria-label",o?"Cerrar menú":"Abrir menú")};
+$("burger").onclick=()=>setMenu(!$("side").classList.contains("open"));
+$("scrim").onclick=()=>setMenu(false);
+document.addEventListener("keydown",e=>{if(e.key==="Escape")setMenu(false)});
+document.querySelectorAll(".nav").forEach(a=>a.addEventListener("click",()=>setMenu(false)));
+$("set").addEventListener("click",()=>setMenu(false));
+let sid=0;
+const nextYm=q=>{let y=+q.slice(0,4),m=+q.slice(5);return m===12?(y+1)+"-01":y+"-"+pad(m+1)};
+function syncInm(){
+  const cur=todayS().slice(0,7),ids=new Set(S.inm.map(h=>String(h.id)));let ch=false,n=0;
+  const len0=S.tx.length;
+  S.tx=S.tx.filter(x=>!x.key||ids.has(x.key.split("|")[0]));
+  S.skip=S.skip.filter(k=>ids.has(k.split("|")[0]));
+  S.inm.forEach(h=>{
+    const want={};
+    if(!h.noAuto){if(!h.since){h.since=cur;ch=true}
+      [["i","Alquiler",h.rent],["g","Hipoteca",h.cuo],["g","Comunidad",h.com]].forEach(([t,c,a])=>{
+        if(a>0)for(let ym=h.since;ym<=cur;ym=nextYm(ym))want[h.id+"|"+ym+"|"+c]={t,c,a,ym}})}
+    S.tx=S.tx.filter(x=>{
+      if(!x.key||!x.key.startsWith(h.id+"|")||x.edited)return true;
+      const w=want[x.key];if(!w)return false;
+      if(x.a!==w.a){x.a=w.a;ch=true}return true});
+    Object.entries(want).forEach(([key,w])=>{
+      if(S.skip.includes(key)||S.tx.some(x=>x.key===key))return;
+      const L=w.t==="i"?S.ic:S.gc;if(!L.includes(w.c))L.push(w.c);
+      S.tx.push({id:Date.now()*100+(sid++),d:w.ym+"-01",t:w.t,c:w.c,a:w.a,key});ch=true;n++})});
+  if(S.tx.length!==len0)ch=true;
+  if(ch)save();
+  return n;
+}
 if(!S.items.find(i=>i.id===S.sel))S.sel=S.items[0]?.id;
-render();tape();charts();schedule();updatePrices();
+syncInm();render();tape();charts();schedule();updatePrices();
 </script>
 </body>
 </html>
